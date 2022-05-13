@@ -1,5 +1,4 @@
 import cv2 as cv 
-import time
 import numpy as np
 
 # Modify the variables below to select behavior
@@ -9,8 +8,7 @@ num_effect_frames = 20 # how long the trail is
 radius = 10
 hue = 0 # Hue is between 0 and 179, could set to None
 saturation = 150 # Saturation is between 0 and 255
-value_decrease = 0 # Value is between 0 and 255
-num_interpolation = 2 # number of frames to fill in the gap between frames
+num_interpolation = 5 # number of frames to fill in the gap between frames
 start_frame = 100 # the first frame that will be used to select Region of Interst (ROI)
 
 # Read input video
@@ -31,9 +29,9 @@ frame_width = int(video.get(3))
 frame_height = int(video.get(4))
 size = (frame_width, frame_height)
 if save_tracking_video:
-    tracked_video = cv.VideoWriter('Videos/quad3_tracking.mp4', cv.VideoWriter_fourcc(*'mp4v'),fps, size)
+    tracked_video = cv.VideoWriter('Videos/tracking_video.mp4', cv.VideoWriter_fourcc(*'mp4v'),fps, size)
 if save_effect_video:
-    effect_video = cv.VideoWriter('Videos/quad3_effect.mp4', cv.VideoWriter_fourcc(*'mp4v'),fps, size)
+    effect_video = cv.VideoWriter('Videos/effect_video.mp4', cv.VideoWriter_fourcc(*'mp4v'),fps, size)
 
 # Read each frame
 while video.isOpened():
@@ -97,7 +95,6 @@ while video.isOpened():
             effect_frame[trail_mask, 0] = hue
         if saturation != None:
             effect_frame[trail_mask, 1] = saturation
-        effect_frame[trail_mask, 2] -= value_decrease
     
         # make sure the range of values is between 0 and 225
         effect_frame.clip(0,255)
